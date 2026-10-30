@@ -1,7 +1,7 @@
 # PHP MVC Practice Skeleton
 
 A minimal MVC base so you can focus on design (auth, repositories, services...) instead of plumbing.
-Requires PHP 8.1+ with `pdo_mysql`. No Composer needed (a PSR-4 autoloader is built in; `composer.json` is provided if you want Composer later).
+Requires PHP 8.1+ with `pdo_mysql`. No Composer or autoloader: every class file is loaded with `require_once` in `app/requires.php`.
 
 ## Run it
 
@@ -17,7 +17,8 @@ Open http://localhost:8000 and http://localhost:8000/health (checks the DB conne
 
 ```
 public/index.php      Front controller (only web-exposed PHP file)
-bootstrap.php         Autoload, env, config, container wiring
+bootstrap.php         Loads app/requires.php, env, config, container wiring
+app/requires.php      List of require_once lines (add a line per new class)
 config/               app.php, database.php, routes.php
 app/Core/             Framework plumbing (don't mix feature code in here)
 app/Controllers/      HTTP layer: read Request, return Response

@@ -14,7 +14,6 @@ final class Application
 {
     public function __construct(private readonly Container $container)
     {
-        require_once BASE_PATH . '/app/Core/helpers.php';
     }
 
     public function run(): void
