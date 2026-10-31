@@ -23,11 +23,14 @@ class RegisterController extends Controller
     {
         $data = $request->parseBody();
 
-        if (!isset($data['email'], $data['password'], $data['name'])) {
+        if (!isset($data['email'], $data['password'])) {
             return $this->json(['error' => 'Missing required fields'], 400);
         }
 
         // Here you would typically save the user to the database.
+
+        
+
         // For demonstration purposes, we'll just return a success message.
 
         return $this->json([
