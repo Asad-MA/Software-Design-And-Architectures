@@ -4,6 +4,12 @@ namespace App\Services;
 
 final class RegistrationService
 {
+
+    public function __construct()
+    {
+        // You can inject dependencies here if needed, such as a UserRepository or NotificationService.
+    }
+
     public function registerUser(array $data): array
     {
         // Here you would typically save the user to the database.

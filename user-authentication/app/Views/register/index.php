@@ -2,6 +2,10 @@
     <h1>Register</h1>
 
     <div>
+        <label for="username">Username:</label>
+        <input type="text" id="username" name="username" required>
+    </div>
+    <div>
         <label for="email">Email:</label>
         <input type="email" id="email" name="email" required>
     </div>

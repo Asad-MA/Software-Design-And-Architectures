@@ -50,9 +50,11 @@ require_once $app . '/Repositories/PasswordCredentialsRepo.php';
 // --- Services (business logic) ---
 require_once $app . '/Services/PasswordAuthenticator.php';
 require_once $app . '/Services/NativePasswordHasher.php';
+require_once $app . '/Services/RegistrationService.php'; 
 
 
 // --- Controllers (HTTP layer) ---
 require_once $app . '/Controllers/HomeController.php';
 require_once $app . '/Controllers/LoginController.php';
 require_once $app . '/Controllers/RegisterController.php';
+require_once $app . '/Controllers/DashboardController.php'; 

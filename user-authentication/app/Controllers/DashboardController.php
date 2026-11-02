@@ -18,8 +18,8 @@ final class DashboardController extends Controller {
         return parent::__construct($view);
     }
 
-    public function showDashboard(){
-        return $this->render('dashboard/index' , ['data' => 'Welcome! You are logged in!']);
+    public function showDashboard(Request $request): Response{
+        return $this->render('dashboard/index' , ['data' => 'Welcome! You are logged in!'], 200);
     }
 
 }

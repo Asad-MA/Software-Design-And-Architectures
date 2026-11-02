@@ -24,13 +24,14 @@ class RegisterController extends Controller
     {
         $data = $request->parseBody();
 
-        if (!isset($data['email'], $data['password'])) {
+        if (!isset($data['email'], $data['password'] , $data['username'])) {
             return $this->json(['error' => 'Missing required fields'], 400);
         }
 
         // Here you would typically save the user to the database.
 
         $result = $this->registrationService->registerUser($data);
+
         
 
         // For demonstration purposes, we'll just return a success message.
@@ -39,7 +40,7 @@ class RegisterController extends Controller
             'message' => 'User registered successfully',
             'user' => [
                 'email' => $data['email'],
-                'name' => $data['name'],
+                'username' => $data['username'],
             ],
         ]);
     }
