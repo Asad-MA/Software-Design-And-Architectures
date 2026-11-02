@@ -5,11 +5,12 @@ use App\Core\Request;
 use App\Core\Response;
 use App\Core\View;
 use App\Core\Controller;
+use App\Services\RegistrationService;
 
 
 class RegisterController extends Controller
 {
-    public function __construct(View $view)
+    public function __construct(View $view , private readonly RegistrationService $registrationService)
     {
         parent::__construct($view);
     }
@@ -29,6 +30,7 @@ class RegisterController extends Controller
 
         // Here you would typically save the user to the database.
 
+        $result = $this->registrationService->registerUser($data);
         
 
         // For demonstration purposes, we'll just return a success message.
