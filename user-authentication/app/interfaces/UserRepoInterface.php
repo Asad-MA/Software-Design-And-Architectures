@@ -1,10 +1,10 @@
 <?php
 namespace App\Interfaces;
-
+use App\Models\User;
 
 interface UserRepoInterface
 {
-    public function findByEmail(string $email): ?array;
+    public function findByEmail(string $email): ?User;
 
     public function create(string $email, string $password): int;
 

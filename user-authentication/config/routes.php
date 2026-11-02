@@ -2,6 +2,7 @@
 
 use App\Controllers\HomeController;
 use App\Controllers\LoginController;
+use App\Controllers\DashboardController;
 use App\Core\Router;
 
 /**
@@ -15,4 +16,5 @@ return static function (Router $router): void {
     $router->get('/register', [\App\Controllers\RegisterController::class, 'showRegistrationForm']);
     $router->post('/register', [\App\Controllers\RegisterController::class, 'register']);
     $router->get('/health', [HomeController::class, 'health']);
+    $router->get('/dashboard' , [DashboardController::class , 'showDashboard']);
 };

@@ -10,10 +10,12 @@ use App\Core\Env;
 use App\Core\Router;
 use App\Interfaces\AuthenticatorInterface;
 use App\Interfaces\PasswordCredentialRepositoryInterface;
+use App\Interfaces\PasswordHasherInterface;
 use App\Interfaces\UserRepoInterface;
 use App\Repositories\PasswordCredentialsRepo;
 use App\Repositories\UserRepo;
 use App\Services\PasswordAuthenticator;
+use App\Services\NativePasswordHasher;
 
 define('BASE_PATH', __DIR__);
 
@@ -42,13 +44,19 @@ $container->singleton(
     UserRepoInterface::class,
     static fn (Container $c) => new UserRepo($c->get(Database::class))
 );
+
+$container->singleton(
+    PasswordHasherInterface::class,
+    fn () => new NativePasswordHasher()
+);
+
 $container->singleton(
     PasswordCredentialRepositoryInterface::class,
     static fn (Container $c) => new PasswordCredentialsRepo($c->get(Database::class))
 );
 $container->singleton(
     AuthenticatorInterface::class,
-    static fn (Container $c) => new PasswordAuthenticator($c->get(UserRepoInterface::class) , $c->get(PasswordCredentialRepositoryInterface::class))
+    static fn (Container $c) => new PasswordAuthenticator($c->get(UserRepoInterface::class) , $c->get(PasswordCredentialRepositoryInterface::class) , $c->get(PasswordHasherInterface::class))
 );
 
 $container->singleton(Router::class, static function (Container $c) {

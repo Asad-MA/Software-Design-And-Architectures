@@ -41,6 +41,7 @@ require_once $app . '/Models/PasswordCredential.php';
 require_once $app . '/Interfaces/UserRepoInterface.php';
 require_once $app . '/Interfaces/PasswordCredentialRepositoryInterface.php';
 require_once $app . '/Interfaces/AuthenticatorInterface.php';
+require_once $app . '/Interfaces/PasswordHasherInterface.php';
 
 // --- Repositories (persistence) ---
 require_once $app . '/Repositories/UserRepo.php';
@@ -48,6 +49,8 @@ require_once $app . '/Repositories/PasswordCredentialsRepo.php';
 
 // --- Services (business logic) ---
 require_once $app . '/Services/PasswordAuthenticator.php';
+require_once $app . '/Services/NativePasswordHasher.php';
+
 
 // --- Controllers (HTTP layer) ---
 require_once $app . '/Controllers/HomeController.php';

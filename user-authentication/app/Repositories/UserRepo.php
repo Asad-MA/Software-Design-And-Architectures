@@ -6,6 +6,7 @@ namespace App\Repositories;
 
 use App\Core\Database;
 use App\Interfaces\UserRepoInterface;
+use App\Models\User;
 
 final class UserRepo implements UserRepoInterface
 {
@@ -14,12 +15,18 @@ final class UserRepo implements UserRepoInterface
     }
 
     /** @return array<string, mixed>|null */
-    public function findByEmail(string $email): ?array
+    public function findByEmail(string $email): ?User
     {
-        return $this->db->fetchOne(
+        $record  = $this->db->fetchOne(
             'SELECT * FROM users WHERE email = :email LIMIT 1',
             ['email' => $email]
         );
+
+        return $record ? new User(
+            id: (string) $record['id'],
+            email: (string) $record['email'],
+            name: (string) ($record['name'] ?? $record['email'])
+        ) : null;
     }
 
     public function create(string $email, string $password): int

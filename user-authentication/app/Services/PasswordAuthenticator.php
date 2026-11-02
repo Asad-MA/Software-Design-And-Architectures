@@ -8,13 +8,12 @@ use App\Interfaces\AuthenticatorInterface;
 use App\Interfaces\UserRepoInterface;
 use App\Interfaces\PasswordCredentialRepositoryInterface;
 use App\Models\PasswordCredential;
+use App\Interfaces\PasswordHasherInterface;
 use App\Models\User;
 
 final class PasswordAuthenticator implements AuthenticatorInterface
 {
-    public function __construct(private readonly UserRepoInterface $users , private readonly PasswordCredentialRepositoryInterface $passwords)
-    {
-    }
+    public function __construct(private readonly UserRepoInterface $users, private readonly PasswordCredentialRepositoryInterface $passwords , private readonly PasswordHasherInterface $hasher) {}
 
     public function authenticate(array $credentials): ?User
     {
@@ -25,30 +24,16 @@ final class PasswordAuthenticator implements AuthenticatorInterface
             return null;
         }
 
-        $record = $this->users->findByEmail($email);
-        if ($record === null || !isset($record['id']) || !is_string($record['id'])) {
+        $user = $this->users->findByEmail($email);
+        if (!$user) {
             return null;
         }
 
-        $user = new User(
-            id: (string) $record['id'],
-            email: (string) $record['email'],
-            name: (string) ($record['name'] ?? $record['email'])
-        );
-
-        $passwordHash = $this->passwords->findByUserId($record['id']);
-
-        $passwordCredential = new PasswordCredential(
-            userId: $user->getId(),
-            passwordHash: $passwordHash ?? ''
-        );
-
-        if (!$passwordCredential->verifyPassword($password)) {
+        $passwordCredential = $this->passwords->findByUserId($user->getId());
+        if (!$passwordCredential || !$this->hasher->verifyPassword($password, $passwordCredential->getPasswordHash())) {
             return null;
         }
 
         return $user;
     }
-
-   
 }
