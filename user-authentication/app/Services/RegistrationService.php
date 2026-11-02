@@ -1,26 +1,41 @@
 <?php
 
 namespace App\Services;
+use App\Interfaces\UserRepoInterface;
+use App\Interfaces\PasswordCredentialRepositoryInterface;
+use App\Interfaces\TransactionManagerInterface;
+use App\Models\User;
+use App\Models\PasswordCredential;
 
 final class RegistrationService
 {
 
-    public function __construct()
+    public function __construct(private readonly UserRepoInterface $userRepo , private readonly PasswordCredentialRepositoryInterface $passwordCredentialRepo, private readonly TransactionManagerInterface $tx)
     {
         // You can inject dependencies here if needed, such as a UserRepository or NotificationService.
     }
 
     public function registerUser(array $data): array
     {
-        // Here you would typically save the user to the database.
-        // For demonstration purposes, we'll just return a success message.
+        return $this->tx->run(function () use ($data) {
+            $user = new User(id: '', email: $data['email'], name: $data['username']);
 
-        return [
-            'message' => 'User registered successfully',
-            'user' => [
-                'email' => $data['email'],
-                'name' => $data['name'],
-            ],
-        ];
+            $userId = $this->userRepo->create($user);
+
+            $this->passwordCredentialRepo->save(
+                new PasswordCredential(
+                    userId: $userId,
+                    passwordHash: password_hash($data['password'], PASSWORD_DEFAULT)
+                )
+            );
+
+            return [
+                'message' => 'User registered successfully',
+                'user' => [
+                    'email' => $user->getEmail(),
+                    'name'  => $user->getName(),
+                ],
+            ];
+        });
     }
 }

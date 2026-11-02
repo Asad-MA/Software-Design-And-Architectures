@@ -29,18 +29,20 @@ final class UserRepo implements UserRepoInterface
         ) : null;
     }
 
-    public function create(string $email, string $password): int
+    public function create(User $user): int
     {
         $this->db->execute(
-            'INSERT INTO users (email, password_hash) VALUES (:email, :password_hash)',
+            'INSERT INTO users (email, display_name) VALUES (:email, :display_name)',
             [
-                'email' => $email,
-                'password_hash' => password_hash($password, PASSWORD_DEFAULT),
+                'email' => $user->getEmail(),
+                'display_name' => $user->getName(),
             ]
         );
 
         return (int) $this->db->lastInsertId();
     }
+
+
 
     /** @return array<string, mixed>|null */
     public function findById(int $id): ?array

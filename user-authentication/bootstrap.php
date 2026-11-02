@@ -11,11 +11,13 @@ use App\Core\Router;
 use App\Interfaces\AuthenticatorInterface;
 use App\Interfaces\PasswordCredentialRepositoryInterface;
 use App\Interfaces\PasswordHasherInterface;
+use App\Interfaces\TransactionManagerInterface;
 use App\Interfaces\UserRepoInterface;
 use App\Repositories\PasswordCredentialsRepo;
 use App\Repositories\UserRepo;
 use App\Services\PasswordAuthenticator;
 use App\Services\NativePasswordHasher;
+use App\Infrastructure\PDOTransactionManager;
 
 define('BASE_PATH', __DIR__);
 
@@ -48,6 +50,11 @@ $container->singleton(
 $container->singleton(
     PasswordHasherInterface::class,
     fn () => new NativePasswordHasher()
+);
+
+$container->singleton(
+    TransactionManagerInterface::class,
+     static fn (Container $c) => new PDOTransactionManager($c->get(Database::class))
 );
 
 $container->singleton(

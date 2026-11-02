@@ -15,21 +15,17 @@ final class PasswordAuthenticator implements AuthenticatorInterface
 {
     public function __construct(private readonly UserRepoInterface $users, private readonly PasswordCredentialRepositoryInterface $passwords , private readonly PasswordHasherInterface $hasher) {}
 
-    public function authenticate(array $credentials): ?User
+    public function verify(array $credentials): ?User
     {
-        $email = $credentials['email'] ?? null;
+        $hash = $credentials['hash'] ?? null;
         $password = $credentials['password'] ?? null;
 
-        if (!is_string($email) || $email === '' || !is_string($password) || $password === '') {
+        if (!is_string($hash) || $hash === '' || !is_string($password) || $password === '') {
             return null;
         }
 
-        $user = $this->users->findByEmail($email);
-        if (!$user) {
-            return null;
-        }
+      //Need to delete this file
 
-        $passwordCredential = $this->passwords->findByUserId($user->getId());
         if (!$passwordCredential || !$this->hasher->verifyPassword($password, $passwordCredential->getPasswordHash())) {
             return null;
         }

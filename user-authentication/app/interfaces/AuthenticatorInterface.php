@@ -6,5 +6,5 @@ use App\Models\User;
 
 interface AuthenticatorInterface
 {
-    public function authenticate(array $credentials): ? User;
+    public function verify(array $credentials): ? User;
 }

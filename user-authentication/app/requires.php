@@ -42,6 +42,10 @@ require_once $app . '/Interfaces/UserRepoInterface.php';
 require_once $app . '/Interfaces/PasswordCredentialRepositoryInterface.php';
 require_once $app . '/Interfaces/AuthenticatorInterface.php';
 require_once $app . '/Interfaces/PasswordHasherInterface.php';
+require_once $app . '/Interfaces/TransactionManagerInterface.php';
+
+// --- Infrastructure (implementations of the contracts) ---
+require_once $app . '/Infrastructure/PDOTransactionManager.php';
 
 // --- Repositories (persistence) ---
 require_once $app . '/Repositories/UserRepo.php';

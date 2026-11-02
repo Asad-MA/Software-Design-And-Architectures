@@ -6,7 +6,7 @@ interface UserRepoInterface
 {
     public function findByEmail(string $email): ?User;
 
-    public function create(string $email, string $password): int;
+    public function create(User $user): int;
 
     public function findById(int $id): ?array;
 }

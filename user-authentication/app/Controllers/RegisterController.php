@@ -5,6 +5,7 @@ use App\Core\Request;
 use App\Core\Response;
 use App\Core\View;
 use App\Core\Controller;
+use App\Models\User;
 use App\Services\RegistrationService;
 
 
@@ -30,9 +31,9 @@ class RegisterController extends Controller
 
         // Here you would typically save the user to the database.
 
-        $result = $this->registrationService->registerUser($data);
-
         
+
+        $result = $this->registrationService->registerUser($data);
 
         // For demonstration purposes, we'll just return a success message.
 

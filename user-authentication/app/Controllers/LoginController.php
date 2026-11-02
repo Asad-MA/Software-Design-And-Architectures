@@ -28,16 +28,8 @@ final class LoginController extends Controller
             return $this->render('login/index', ['error' => 'Invalid email or password'], 401);
         }
 
-        return $this->redirect('/dashboard');
+        return $this->redirect(url('/dashboard'));
 
-        // return $this->json([
-        //     'message' => 'Login successful',
-        //     'user' => [
-        //         'id' => $user->getId(),
-        //         'email' => $user->getEmail(),
-        //         'name' => $user->getName(),
-        //     ],
-        // ]);
     }
 
     public function showLoginForm(): Response
