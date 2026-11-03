@@ -61,10 +61,7 @@ $container->singleton(
     PasswordCredentialRepositoryInterface::class,
     static fn (Container $c) => new PasswordCredentialsRepo($c->get(Database::class))
 );
-$container->singleton(
-    AuthenticatorInterface::class,
-    static fn (Container $c) => new PasswordAuthenticator($c->get(UserRepoInterface::class) , $c->get(PasswordCredentialRepositoryInterface::class) , $c->get(PasswordHasherInterface::class))
-);
+
 
 $container->singleton(Router::class, static function (Container $c) {
     $router = new Router($c);

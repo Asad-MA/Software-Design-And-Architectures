@@ -3,29 +3,32 @@ namespace App\Services;
 
 use App\Interfaces\UserRepoInterface;
 use App\Interfaces\PasswordCredentialRepositoryInterface;
-use App\Interfaces\AuthenticatorInterface;
+use App\Interfaces\PasswordHasherInterface;
+use App\Models\User;
 
 final class LoginService
 {
-    public function __construct(private readonly UserRepoInterface $userRepo, private readonly PasswordCredentialRepositoryInterface $passwordCredentialRepo, private readonly AuthenticatorInterface $authenticator)
+    public function __construct(private readonly UserRepoInterface $userRepo, private readonly PasswordCredentialRepositoryInterface $passwordCredentialRepo, private readonly PasswordHasherInterface $passwordHasher)
     {
     }
 
-    public function login(string $email, string $password): bool
+    public function login(string $email, string $password): User|null
     {
         $user = $this->userRepo->findByEmail($email);
 
         if (!$user) {
-            return false;
+            return null;
         }
 
         $credentials = $this->passwordCredentialRepo->findByUserId($user->getId());
 
-        if (!$credentials || !$this->authenticator->verify(['password' => $password, 'hash' => $credentials->getPasswordHash()])) {
-            return false;
+        if (!$credentials || !$this->passwordHasher->verifyPassword($password, $credentials->getPasswordHash())) {
+            return null;
         }
 
+
+
         // Authentication successful, you can set session or token here if needed.
-        return true;
+        return $user;
     }
 }

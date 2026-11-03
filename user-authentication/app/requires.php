@@ -40,21 +40,22 @@ require_once $app . '/Models/PasswordCredential.php';
 // --- Interfaces (contracts): before the classes that implement them ---
 require_once $app . '/Interfaces/UserRepoInterface.php';
 require_once $app . '/Interfaces/PasswordCredentialRepositoryInterface.php';
-require_once $app . '/Interfaces/AuthenticatorInterface.php';
+
 require_once $app . '/Interfaces/PasswordHasherInterface.php';
 require_once $app . '/Interfaces/TransactionManagerInterface.php';
 
 // --- Infrastructure (implementations of the contracts) ---
 require_once $app . '/Infrastructure/PDOTransactionManager.php';
 
+require_once $app . '/Infrastructure/NativePasswordHasher.php';
+
 // --- Repositories (persistence) ---
 require_once $app . '/Repositories/UserRepo.php';
 require_once $app . '/Repositories/PasswordCredentialsRepo.php';
 
 // --- Services (business logic) ---
-require_once $app . '/Services/PasswordAuthenticator.php';
-require_once $app . '/Services/NativePasswordHasher.php';
 require_once $app . '/Services/RegistrationService.php'; 
+require_once $app . '/Services/LoginService.php';
 
 
 // --- Controllers (HTTP layer) ---
