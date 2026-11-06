@@ -26,8 +26,6 @@ final class LoginService
             return null;
         }
 
-
-
         // Authentication successful, you can set session or token here if needed.
         return $user;
     }
