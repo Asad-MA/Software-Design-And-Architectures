@@ -6,10 +6,12 @@ class BankTransferProcessor implements PaymentProvider
     {
         // Simulate bank transfer payment processing logic
         if ($amount <= 0) {
-            return new PaymentResult(false, 'failed/rejected', 'Invalid payment amount.');
+            return PaymentResult::failure('failed/rejected', 'Invalid payment amount.');
         }
 
         // Simulate a successful payment
-        return new PaymentResult(true, 'success/accepted', 'Payment processed successfully via bank transfer.');
+        return PaymentResult::success('success/accepted', 'Payment processed successfully via bank transfer.');
     }
+
+
 }

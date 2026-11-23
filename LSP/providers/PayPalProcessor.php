@@ -6,10 +6,10 @@ class PayPalPaymentProvider implements PaymentProvider
     {
         // Simulate payment processing logic for PayPal
         if ($amount <= 0) {
-            return new PaymentResult(false, 'failed/rejected', 'Invalid payment amount.');
+            return PaymentResult::failure('failed/rejected', 'Invalid payment amount.');
         }
 
         // Simulate a successful payment
-        return new PaymentResult(true, 'success/accepted', 'Payment processed successfully via PayPal.');
+        return PaymentResult::success('success/accepted', 'Payment processed successfully via PayPal.');
     }
 }
