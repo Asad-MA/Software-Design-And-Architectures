@@ -1,15 +1,25 @@
 <?php
 
-class PayPalPaymentProvider implements PaymentProvider
+class PayPalPaymentProcessor implements PaymentProvider
 {
-    public function processPayment(float $amount, string $currency): PaymentResult
+    public function processPayment(float $amount): PaymentOutcome
     {
+        //simulate balance
+        $balance = 1000.00;
+
+
         // Simulate payment processing logic for PayPal
         if ($amount <= 0) {
-            return PaymentResult::failure('failed/rejected', 'Invalid payment amount.');
+            return PaymentResult::failure('Invalid payment amount.');
         }
 
+        if ($amount > $balance) {
+            return PaymentResult::failure('Insufficient funds in your PayPal account.');
+        }
+
+        $transaction_id = 'trnx_paypal' . microtime();
+
         // Simulate a successful payment
-        return PaymentResult::success('success/accepted', 'Payment processed successfully via PayPal.');
+        return PaymentResult::success($transaction_id, 'Successful payment processed via PayPal.');
     }
 }

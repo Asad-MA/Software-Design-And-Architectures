@@ -9,13 +9,17 @@ final class CheckoutService
 
     public function checkout(float $amount): array
     {
-        $transaction = $this->paymentProvider->processPayment($amount, 'USD');
+        if ($amount <= 0) {
+            throw new InvalidArgumentException('Payment amount must be greater than zero.');
+        }
+
+        $transaction = $this->paymentProvider->processPayment($amount);
 
 
 
         return array(
             'amount' => $amount,
-            'transaction_id' => $transaction->isSuccess() ? $this->generateTransactionId() : null,
+            'transaction_id' => $transaction->getTransactionID(),
             'status' => $transaction->getStatus(),
             'message' => $transaction->getMessage()
         );

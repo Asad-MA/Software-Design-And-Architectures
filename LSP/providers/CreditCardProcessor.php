@@ -2,14 +2,23 @@
 
 class CreditCardProcessor implements PaymentProvider
 {
-    public function processPayment(float $amount, string $currency): PaymentResult
+    public function processPayment(float $amount): PaymentOutcome
     {
+        // Simulate Account Balance
+        $balance = 500.00;
+
         // Simulate credit card payment processing logic
         if ($amount <= 0) {
-            return PaymentResult::failure('failed/rejected', 'Invalid payment amount.');
+            return PaymentResult::failure('Invalid payment amount.');
         }
 
+        if ($amount > $balance) {
+            return PaymentResult::failure('Insufficient funds in your credit card account.');
+        }
+
+        $transaction_id = 'trnx_card' . microtime();
+
         // Simulate successful payment processing
-        return PaymentResult::success('success/accepted', 'Payment processed successfully via credit card.');
+        return PaymentResult::success($transaction_id , 'Successful payment processed via Credit Card.');
     }
 }

@@ -4,7 +4,7 @@ function selectPaymentProvider(string $providerName): PaymentProvider
 {
     switch ($providerName) {
         case 'paypal':
-            return new PayPalPaymentProvider();
+            return new PayPalPaymentProcessor();
         case 'bank':
             return new BankTransferProcessor();
         case 'card':

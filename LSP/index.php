@@ -17,8 +17,9 @@ if($_SERVER['REQUEST_METHOD'] === 'POST') {
         $checkoutService = new CheckoutService($paymentProvider);
         $transaction = $checkoutService->checkout($amount);
         echo '<p class="message">Transaction Result:</p>';
-        echo '<p class="message"><b>Status:</b> ' . htmlspecialchars($transaction['status']) . '</p>';
+       echo '<p class="message"><b>Status:</b> ' . htmlspecialchars($transaction['status']) . '</p>';
         echo '<p class="message"><b>Message:</b> ' . htmlspecialchars($transaction['message']) . '</p>';
+        echo '<p class="message"><b>Amount:</b> ' . htmlspecialchars($transaction['amount']) . '</p>';
         echo '<p class="message"><b>Transaction ID:</b> ' . htmlspecialchars($transaction['transaction_id']) . '</p>';
         //print_r($transaction);
     } catch (InvalidArgumentException $e) {

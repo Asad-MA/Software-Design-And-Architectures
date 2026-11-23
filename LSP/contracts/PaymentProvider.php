@@ -1,12 +1,19 @@
 <?php
 
-final class PaymentResult{
-    public function __construct(private bool $success, private string $transactionId, private ?string $message = null)
-    {
-    }
+interface PaymentOutcome
+{
+    public function getTransactionID(): ?string;
+    public function isSuccess(): bool;
+    public function getMessage(): ?string;
+    public function getStatus(): string;
+}
 
-      public static function success(
-        string $transactionId
+final class PaymentResult implements PaymentOutcome
+{
+    private function __construct(private string $status, private string|null $transactionId, private ?string $message = null) {}
+
+    public static function success(
+        string $transactionId , string|null $message
     ): self {
         if (trim($transactionId) === '') {
             throw new InvalidArgumentException(
@@ -14,31 +21,43 @@ final class PaymentResult{
             );
         }
 
-        return new self(true, $transactionId, null);
+
+        return new self('accepted/success', $transactionId, $message);
     }
 
-    public static function failure(string $status = 'failed/rejected', ?string $message = null): self
+    public static function failure(string $message): self
     {
-        return new self(false, $status, $message);
+        if (trim($message) === '') {
+            throw new InvalidArgumentException(
+                'Failure message is required.'
+            );
+        }
+
+        return new self('failed/rejected', null, $message);
     }
 
-    public function getStatus(): string
+    public function getTransactionID(): string|null
     {
-        return $this->status;
+        return $this->transactionId;
     }
 
     public function isSuccess(): bool
     {
-        return $this->success;
+        return $this->status === 'accepted/success';
     }
 
     public function getMessage(): ?string
     {
         return $this->message;
     }
+
+    public function getStatus(): string
+    {
+        return $this->status;
+    }
 }
 
 interface PaymentProvider
 {
-    public function processPayment(float $amount , string $currency ): PaymentResult;
+    public function processPayment(float $amount): PaymentOutcome;
 }

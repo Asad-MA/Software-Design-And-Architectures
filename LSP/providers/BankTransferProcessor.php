@@ -2,15 +2,24 @@
 
 class BankTransferProcessor implements PaymentProvider
 {
-    public function processPayment(float $amount, string $currency): PaymentResult
+    public function processPayment(float $amount): PaymentOutcome
     {
+        //Simulate Bank Transfer Balance
+        $balance = 2000.00;
+
         // Simulate bank transfer payment processing logic
         if ($amount <= 0) {
-            return PaymentResult::failure('failed/rejected', 'Invalid payment amount.');
+            return PaymentResult::failure('Invalid payment amount.');
         }
 
-        // Simulate a successful payment
-        return PaymentResult::success('success/accepted', 'Payment processed successfully via bank transfer.');
+        if ($amount > $balance) {
+            return PaymentResult::failure('Insufficient funds in your bank account.');
+        }
+
+        $transaction_id = 'trnx_bank' . microtime();
+
+        // Simulate successful payment processing
+        return PaymentResult::success($transaction_id , 'Successful payment processed via Bank Transfer.');
     }
 
 
