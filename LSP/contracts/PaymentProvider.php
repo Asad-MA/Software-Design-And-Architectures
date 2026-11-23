@@ -5,9 +5,16 @@ final class PaymentResult{
     {
     }
 
-    public static function success(string $status = 'success/accepted', ?string $message = null): self
-    {
-        return new self(true, $status, $message);
+      public static function success(
+        string $transactionId
+    ): self {
+        if (trim($transactionId) === '') {
+            throw new InvalidArgumentException(
+                'Transaction ID is required.'
+            );
+        }
+
+        return new self(true, $transactionId, null);
     }
 
     public static function failure(string $status = 'failed/rejected', ?string $message = null): self
