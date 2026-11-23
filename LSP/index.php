@@ -5,6 +5,7 @@ require_once __DIR__ . '/providers/PayPalProcessor.php';
 require_once __DIR__ . '/providers/BankTransferProcessor.php';
 require_once __DIR__ . '/providers/CreditCardProcessor.php';
 require_once __DIR__ . '/CheckoutService.php';
+require_once __DIR__ . '/factory.php';
 
 if($_SERVER['REQUEST_METHOD'] === 'POST') {
     
@@ -12,9 +13,9 @@ if($_SERVER['REQUEST_METHOD'] === 'POST') {
     $providerName = $_POST['payment_provider'] ?? '';
 
     try {
-        $paymentProvider = CheckoutService::selectPaymentProvider($providerName);
-        $checkoutService = new CheckoutService();
-        $transaction = $checkoutService->checkout($paymentProvider, $amount);
+        $paymentProvider = selectPaymentProvider($providerName);
+        $checkoutService = new CheckoutService($paymentProvider);
+        $transaction = $checkoutService->checkout($amount);
         echo '<p class="message">Transaction Result:</p>';
         echo '<p class="message"><b>Status:</b> ' . htmlspecialchars($transaction['status']) . '</p>';
         echo '<p class="message"><b>Message:</b> ' . htmlspecialchars($transaction['message']) . '</p>';

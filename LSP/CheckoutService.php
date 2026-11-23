@@ -2,11 +2,14 @@
 
 final class CheckoutService
 {
-
-
-    public function checkout(PaymentProvider $paymentProvider, float $amount): array
+    public function __construct(private PaymentProvider $paymentProvider)
     {
-        $transaction = $paymentProvider->processPayment($amount, 'USD');
+        // No initialization required for this service
+    }
+
+    public function checkout(float $amount): array
+    {
+        $transaction = $this->paymentProvider->processPayment($amount, 'USD');
 
 
 
@@ -18,19 +21,6 @@ final class CheckoutService
         );
     }
 
-    public static function selectPaymentProvider(string $providerName): PaymentProvider
-    {
-        switch ($providerName) {
-            case 'paypal':
-                return new PayPalPaymentProvider();
-            case 'bank':
-                return new BankTransferProcessor();
-            case 'card':
-                return new CreditCardProcessor();
-            default:
-                throw new InvalidArgumentException("Invalid payment provider: $providerName");
-        }
-    }
 
     public function generateTransactionId(string $prefix = 'txn_'): string
     {
