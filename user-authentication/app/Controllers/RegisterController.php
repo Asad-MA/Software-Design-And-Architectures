@@ -1,0 +1,48 @@
+<?php
+namespace App\Controllers;
+
+use App\Core\Request;
+use App\Core\Response;
+use App\Core\View;
+use App\Core\Controller;
+use App\Models\User;
+use App\Services\RegistrationService;
+
+
+class RegisterController extends Controller
+{
+    public function __construct(View $view , private readonly RegistrationService $registrationService)
+    {
+        parent::__construct($view);
+    }
+
+    public function showRegistrationForm(): Response
+    {
+        return $this->render('register/index');
+    }
+
+    public function register(Request $request): Response
+    {
+        $data = $request->parseBody();
+
+        if (!isset($data['email'], $data['password'] , $data['username'])) {
+            return $this->json(['error' => 'Missing required fields'], 400);
+        }
+
+        // Here you would typically save the user to the database.
+
+        
+
+        $result = $this->registrationService->registerUser($data);
+
+        // For demonstration purposes, we'll just return a success message.
+
+        return $this->json([
+            'message' => 'User registered successfully',
+            'user' => [
+                'email' => $data['email'],
+                'username' => $data['username'],
+            ],
+        ]);
+    }
+}

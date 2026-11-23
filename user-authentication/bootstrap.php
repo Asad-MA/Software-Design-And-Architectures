@@ -1,0 +1,73 @@
+<?php
+
+declare(strict_types=1);
+
+use App\Core\Application;
+use App\Core\Config;
+use App\Core\Container;
+use App\Core\Database;
+use App\Core\Env;
+use App\Core\Router;
+use App\Interfaces\AuthenticatorInterface;
+use App\Interfaces\PasswordCredentialRepositoryInterface;
+use App\Interfaces\PasswordHasherInterface;
+use App\Interfaces\TransactionManagerInterface;
+use App\Interfaces\UserRepoInterface;
+use App\Repositories\PasswordCredentialsRepo;
+use App\Repositories\UserRepo;
+use App\Services\PasswordAuthenticator;
+use App\Services\NativePasswordHasher;
+use App\Infrastructure\PDOTransactionManager;
+
+define('BASE_PATH', __DIR__);
+
+// --- Load all class files (plain require_once; see app/requires.php) ---
+require_once BASE_PATH . '/app/requires.php';
+
+// --- Environment & configuration ---
+Env::load(BASE_PATH . '/.env');
+$config = new Config(BASE_PATH . '/config');
+
+// --- Error visibility driven by config ---
+$debug = (bool) $config->get('app.debug', false);
+ini_set('display_errors', $debug ? '1' : '0');
+error_reporting(E_ALL);
+date_default_timezone_set((string) $config->get('app.timezone', 'UTC'));
+
+// --- Dependency container: register shared services here ---
+$container = new Container();
+$container->instance(Config::class, $config);
+
+$container->singleton(Database::class, static fn (Container $c) => new Database(
+    $c->get(Config::class)->get('database')
+));
+
+$container->singleton(
+    UserRepoInterface::class,
+    static fn (Container $c) => new UserRepo($c->get(Database::class))
+);
+
+$container->singleton(
+    PasswordHasherInterface::class,
+    fn () => new NativePasswordHasher()
+);
+
+$container->singleton(
+    TransactionManagerInterface::class,
+     static fn (Container $c) => new PDOTransactionManager($c->get(Database::class))
+);
+
+$container->singleton(
+    PasswordCredentialRepositoryInterface::class,
+    static fn (Container $c) => new PasswordCredentialsRepo($c->get(Database::class))
+);
+
+
+$container->singleton(Router::class, static function (Container $c) {
+    $router = new Router($c);
+    $routes = require BASE_PATH . '/config/routes.php';
+    $routes($router);
+    return $router;
+});
+
+return new Application($container);
